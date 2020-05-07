@@ -10,7 +10,9 @@ class XCTestGenerator {
 
 private extension Mirror {
 
-  // Possible improvement
+  // See test for example.
+  //
+  // Possible improvements
   // - Only generate for children that conforms to Equatable.
   //   But Equatable has Self requirement, which makes checking protocol
   //   conformance checking not possible :(
