@@ -1,27 +1,25 @@
 import Foundation
 
 class XCTestGenerator {
-  class func generateXCAssertEqual(for variable: Any, name: String) -> String {
-    Mirror(reflecting: variable).generateXCAssertEqual(variableName: name).joined(separator: "\n")
+  class func generateXCAssertEqualStrings(for variable: Any, name: String) -> String {
+    Mirror(reflecting: variable)
+      .generateXCAssertEqualStrings(variableName: name)
+      .joined(separator: "\n")
   }
 }
 
 private extension Mirror {
 
-  // Generates XCTAssertEqual(...) code from receiver
-  // --- Input: ---
-  //   class Episode {
-  //     let number: Int = 42
-  //     let someNil: String? = nil
-  //   }
-  // --- Output: ---
-  //   XCTAssertEqual(output.number, 42)
-  //   XCTAssertEqual(output.someNil, nil)
-  func generateXCAssertEqual(variableName: String) -> [String] {
+  // Possible improvement
+  // - Only generate for children that conforms to Equatable.
+  //   But Equatable has Self requirement, which makes checking protocol
+  //   conformance checking not possible :(
+  //   So just remove things you don't want to check manually for now.
+  func generateXCAssertEqualStrings(variableName: String) -> [String] {
     var output: [String] = []
 
     if let superclassMirror = superclassMirror {
-      output += superclassMirror.generateXCAssertEqual(variableName: variableName)
+      output += superclassMirror.generateXCAssertEqualStrings(variableName: variableName)
       output += [""]
     }
 
@@ -49,7 +47,3 @@ private extension Mirror {
   }
 
 }
-
-//func isEquatable(_ value: Any) -> Bool {
-//  return (value as? AnyObject)?.conforms(to: protocol(Hashable)) ?? false
-//}
