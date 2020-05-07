@@ -1,11 +1,10 @@
 # XCTestGenerator
 
-Generate XCTAssertEqual() code from any type that checks all of its properties.
-
+```swift
 # Story
 
 Suppose you have an `Episode` class with several properties. Something like this.
-```
+```swift
 struct SimpleStruct {
   let foo: String = "foo!"
   let bar: String? = "bar?"
@@ -34,13 +33,13 @@ What if you can generate it?
 Using Swift's Reflection framework. We can iterate through all properties use that to generate some code! 
 
 So this...
-```
+```swift
 let output = Episode()
 let string = XCTestGenerator.generateXCAssertEqualStrings(for: output, name: "output")
 ```
 
 will generate this code...
-```
+```swift
 // Episode
 XCTAssertEqual(output.number, 42)
 XCTAssertEqual(output.someOptional, "some optional")
