@@ -1,6 +1,7 @@
 # XCTestGenerator
 
-```swift
+A Swift Package for generating simple XCTest code from any variable.
+
 # Story
 
 Suppose you have an `Episode` class with several properties. Something like this.
