@@ -31,7 +31,7 @@ All property values are set up here. But in real world, you might write a Decoda
 
 What if you can generate it?
 
-Using Swift's Reflection framework. We can iterate through all properties use that to generate some code! 
+Using Swift's [Reflection](https://developer.apple.com/documentation/swift/mirror) framework. We can iterate through all properties use that to generate some code! 
 
 So this...
 ```swift
