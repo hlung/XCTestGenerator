@@ -1,22 +1,24 @@
 import Foundation
 
-class XCTestGenerator {
-  class func generateXCAssertEqualStrings(for variable: Any, name: String) -> String {
+public class XCTestGenerator {
+
+  /// Example:
+  /// let string = XCTestGenerator.generate(for: output, name: "output")
+  public class func generate(for variable: Any, name: String) -> String {
     Mirror(reflecting: variable)
       .generateXCAssertEqualStrings(variableName: name)
       .joined(separator: "\n")
   }
+
+  internal class func generateAsStringArray(for variable: Any, name: String) -> [String] {
+    Mirror(reflecting: variable)
+      .generateXCAssertEqualStrings(variableName: name)
+  }
+
 }
 
 private extension Mirror {
 
-  // See test for example.
-  //
-  // Possible improvements
-  // - Only generate for children that conforms to Equatable.
-  //   But Equatable has Self requirement, which makes checking protocol
-  //   conformance checking not possible :(
-  //   So just remove things you don't want to check manually for now.
   func generateXCAssertEqualStrings(variableName: String) -> [String] {
     var output: [String] = []
 
@@ -32,17 +34,21 @@ private extension Mirror {
       name = variableName + "." + name
 
       let value = c.value
+      var valueString: String
       if let string = value as? String {
-        output += ["XCTAssertEqual(\(name), \"\(string)\")"]
+        valueString = "\"\(string)\""
       }
       else if let date = value as? Date {
-        output += ["XCTAssertEqual(\(name), Date(timeIntervalSince1970: \(date.timeIntervalSince1970)))"]
+        valueString = "Date(timeIntervalSince1970: \(date.timeIntervalSince1970))"
       }
       else {
-        // Replace "Optional(x)" with "x"
-        let string = "\(value)".replacingOccurrences(of: "Optional\\((.+)\\)", with: "$1", options: .regularExpression)
-        output += ["XCTAssertEqual(\(name), \(string))"]
+        valueString = "\(value)"
       }
+
+      // Replace "Optional(x)" with "x"
+      valueString = "\(valueString)".replacingOccurrences(of: "Optional\\((.+)\\)", with: "$1", options: .regularExpression)
+
+      output += ["XCTAssertEqual(\(name), \(valueString))"]
     }
 
     return output
