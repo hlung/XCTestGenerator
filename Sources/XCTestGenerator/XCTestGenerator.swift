@@ -48,7 +48,14 @@ private extension Mirror {
 
     output += ["// \(subjectType)"]
     for child in children {
-      output += labelValues(for: name, child: child).map { "XCTAssertEqual(\($0.label), \($0.value))" }
+      output += labelValues(for: name, child: child).map { lv in
+        if lv.failed {
+          return "// Type \(lv.value) of \"\(lv.label)\" is currently unsupported."
+        }
+        else {
+          return "XCTAssertEqual(\(lv.label), \(lv.value))"
+        }
+      }
     }
 
     return output
@@ -87,7 +94,7 @@ private extension Mirror {
         }
       }
       else {
-//        result += [LabelValue(label: label, value: "\(value)", failed: true)]
+        result += [LabelValue(label: label, value: "\(type(of: value))", failed: true)]
       }
     }
     return result

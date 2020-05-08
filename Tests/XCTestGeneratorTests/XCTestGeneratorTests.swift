@@ -102,6 +102,5 @@ class Episode: Media {
   let url: URL = URL(string: "https://www.google.com")!
   let simpleStruct = SimpleStruct()
   let simpleClass = SimpleClass()
-  let color = UIColor.red
 }
 
