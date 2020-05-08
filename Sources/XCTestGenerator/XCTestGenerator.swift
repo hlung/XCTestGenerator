@@ -21,6 +21,7 @@ private extension Mirror {
 
   func generateXCAssertEqualStrings(variableName: String) -> [String] {
     var output: [String] = []
+    output += ["-------------------"]
 
     if let superclassMirror = superclassMirror {
       output += superclassMirror.generateXCAssertEqualStrings(variableName: variableName)
@@ -52,6 +53,7 @@ private extension Mirror {
       output += ["XCTAssertEqual(\(name), \(valueString))"]
     }
 
+    output += ["-------------------"]
     return output
   }
 
