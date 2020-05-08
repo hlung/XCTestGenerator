@@ -1,5 +1,7 @@
 # XCTestGenerator
 
+![](https://github.com/hlung/XCTestGenerator/workflows/Swift/badge.svg)
+
 A Swift Package for generating simple XCTest code from any variable.
 
 # Story
