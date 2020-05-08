@@ -4,6 +4,10 @@
 
 A Swift Package for generating simple XCTest code from any variable.
 
+## Requirements
+
+- Swift 5.1
+
 # Story
 
 Suppose you have an `Episode` class with several properties. Something like this.
@@ -18,15 +22,18 @@ struct SimpleClass {
   let bar: String? = "bar?"
 }
 
-class Episode {
+class Episode: Media {
   let number: Int = 42
+  let intDict: [String: Int] = ["en": 11]
   let someOptional: String? = "some optional"
   let someNil: String? = nil
   let date: Date = Date(timeIntervalSince1970: 12345)
   let bool: Bool = true
+  let url: URL = URL(string: "https://www.google.com")!
   let simpleStruct = SimpleStruct()
   let simpleClass = SimpleClass()
 }
+
 ```
 
 All property values are set up here. But in real world, you might write a Decodable function `init(from decoder:)` to parse from JSON data, handling some edge cases. How do you confirm all properties are parsed correctly? Of course by checking all the properties. But writing each test case for each property is tedious.
