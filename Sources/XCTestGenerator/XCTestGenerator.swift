@@ -59,6 +59,8 @@ extension Mirror {
 extension String {
   func removingAllOptionals() -> String {
     var input = self
+
+    // loop to remove handle nested parentheses
     while true {
       let output = input.replacingOccurrences(of: #"Optional\((.*?)\)"#,
                                               with: "$1",
