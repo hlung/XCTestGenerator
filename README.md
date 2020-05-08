@@ -22,7 +22,7 @@ struct SimpleClass {
   let bar: String? = "bar?"
 }
 
-class Episode: Media {
+class Episode {
   let number: Int = 42
   let intDict: [String: Int] = ["en": 11]
   let someOptional: String? = "some optional"
