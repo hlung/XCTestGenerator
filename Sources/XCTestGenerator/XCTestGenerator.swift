@@ -61,7 +61,7 @@ private extension Mirror {
 
 extension String {
   func wrapURLsWithInitializers() -> String {
-    let pattern = #"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"#
+    let pattern = #"[^"](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))[^"]"#
     return replacingOccurrences(of: pattern, with: "URL(string: \"$1\")!", options: .regularExpression)
   }
 
