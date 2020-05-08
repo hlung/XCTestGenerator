@@ -2,7 +2,7 @@ import XCTest
 @testable import XCTestGenerator
 
 final class XCTestGeneratorTests: XCTestCase {
-  func testExample() {
+  func test_generate() {
 
     let output = Episode()
     let array = XCTestGenerator.generateAsStringArray(for: output, name: "output")
@@ -28,9 +28,23 @@ final class XCTestGeneratorTests: XCTestCase {
     }
   }
 
-  static var allTests = [
-    ("testExample", testExample),
-  ]
+//  static var allTests = [
+//    ("testExample", testExample),
+//  ]
+
+  func test_remove_optional() {
+    XCTAssertEqual(
+      #"Optional("ja") Optional("ja")"#.removingAllOptionals(),
+      #""ja" "ja""#
+    )
+  }
+
+  func test_remove_optional_nested() {
+    XCTAssertEqual(
+      #"Optional(a, Optional("ja"), Optional("ja"))"#.removingAllOptionals(),
+      #"a, "ja", "ja""#
+    )
+  }
 }
 
 struct SimpleStruct {

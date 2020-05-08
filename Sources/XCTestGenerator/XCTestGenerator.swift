@@ -17,7 +17,7 @@ public class XCTestGenerator {
 
 }
 
-private extension Mirror {
+extension Mirror {
 
   func generateXCAssertEqualStrings(variableName: String) -> [String] {
     var output: [String] = []
@@ -46,7 +46,7 @@ private extension Mirror {
       }
 
       // Replace "Optional(x)" with "x"
-      valueString = "\(valueString)".replacingOccurrences(of: "Optional\\((.+)\\)", with: "$1", options: .regularExpression)
+      valueString = "\(valueString)".removingAllOptionals()
 
       output += ["XCTAssertEqual(\(name), \(valueString))"]
     }
@@ -54,4 +54,21 @@ private extension Mirror {
     return output
   }
 
+}
+
+extension String {
+  func removingAllOptionals() -> String {
+    var input = self
+    while true {
+      let output = input.replacingOccurrences(of: #"Optional\((.*?)\)"#,
+                                              with: "$1",
+                                              options: .regularExpression)
+      if output == input {
+        return output
+      }
+      else {
+        input = output
+      }
+    }
+  }
 }
