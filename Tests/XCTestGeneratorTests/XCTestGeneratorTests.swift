@@ -45,6 +45,13 @@ final class XCTestGeneratorTests: XCTestCase {
       #"a, "ja", "ja""#
     )
   }
+
+  func test_wrap_url() {
+    XCTAssertEqual(
+      #"Viki.Images.Image(url: https://fakeimage.com, source: "viki"))"#.wrapURLsWithInitializers(),
+      #"Viki.Images.Image(url: URL(string: "https://fakeimage.com")!, source: "viki"))"#
+    )
+  }
 }
 
 struct SimpleStruct {

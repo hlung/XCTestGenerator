@@ -10,14 +10,14 @@ public class XCTestGenerator {
       .joined(separator: "\n")
   }
 
-  internal class func generateAsStringArray(for variable: Any, name: String) -> [String] {
+  class func generateAsStringArray(for variable: Any, name: String) -> [String] {
     Mirror(reflecting: variable)
       .generateXCAssertEqualStrings(variableName: name)
   }
 
 }
 
-extension Mirror {
+private extension Mirror {
 
   func generateXCAssertEqualStrings(variableName: String) -> [String] {
     var output: [String] = []
@@ -46,7 +46,8 @@ extension Mirror {
       }
 
       // Replace "Optional(x)" with "x"
-      valueString = "\(valueString)".removingAllOptionals()
+      valueString = valueString.removingAllOptionals()
+      valueString = valueString.wrapURLsWithInitializers()
 
       output += ["XCTAssertEqual(\(name), \(valueString))"]
     }
@@ -57,6 +58,11 @@ extension Mirror {
 }
 
 extension String {
+  func wrapURLsWithInitializers() -> String {
+    let pattern = #"(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"#
+    return replacingOccurrences(of: pattern, with: "URL(string: \"$1\")!", options: .regularExpression)
+  }
+
   func removingAllOptionals() -> String {
     var input = self
 
