@@ -14,6 +14,10 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(output.array.count, 2)
     XCTAssertEqual(output.array[0], "foo")
     XCTAssertEqual(output.array[1], "bar")
+    XCTAssertEqual(output.stringDict.count, 1)
+    XCTAssertEqual(output.stringDict["en"], "Hi")
+    XCTAssertEqual(output.intDict.count, 1)
+    XCTAssertEqual(output.intDict["en"], 11)
 
     // Episode
     XCTAssertEqual(output.number, 42)
@@ -22,36 +26,17 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(output.date, Date(timeIntervalSince1970: 12345.0))
     XCTAssertEqual(output.bool, true)
     XCTAssertEqual(output.url, URL(string: "https://www.google.com")!)
+    XCTAssertEqual(output.simpleStruct.foo, "foo!")
+    XCTAssertEqual(output.simpleStruct.bar, "bar?")
+    XCTAssertEqual(output.simpleClass.foo, "foo!")
+    XCTAssertEqual(output.simpleClass.bar, "bar?")
     """
-
-//    let expected = """
-//    // Media
-//    XCTAssertEqual(output.name, "Some media")
-//    XCTAssertEqual(output.array.count, 2)
-//    XCTAssertEqual(output.array[0], "foo")
-//    XCTAssertEqual(output.array[1], "bar")
-//    XCTAssertEqual(output.stringDict.count, 1)
-//    XCTAssertEqual(output.stringDict["en"], "Hi")
-//    XCTAssertEqual(output.intDict.count, 1)
-//    XCTAssertEqual(output.intDict["en"], 11)
-//
-//    // Episode
-//    XCTAssertEqual(output.number, 42)
-//    XCTAssertEqual(output.someOptional, "some optional")
-//    XCTAssertEqual(output.someNil, nil)
-//    XCTAssertEqual(output.date, Date(timeIntervalSince1970: 12345.0))
-//    XCTAssertEqual(output.bool, true)
-//    XCTAssertEqual(output.simpleStruct.foo, "foo!")
-//    XCTAssertEqual(output.simpleStruct.bar, "bar?")
-//    XCTAssertEqual(output.simpleClass.foo, "foo!")
-//    XCTAssertEqual(output.simpleClass.bar, "bar?")
-//    XCTAssertEqual(output.url, URL(string: "https://www.google.com")!)
-//    """
 
     let outputArray = output.split(separator: "\n")
     let expectedArray = expected.split(separator: "\n")
 
     XCTAssertEqual(outputArray.count, expectedArray.count)
+
     for i in 0..<expectedArray.count {
       XCTAssertEqual(outputArray[i], expectedArray[i])
     }
@@ -102,7 +87,8 @@ struct SimpleClass {
 class Media {
   let name: String = "Some media"
   let array: [String] = ["foo", "bar"]
-  // note: printing a dictionary randomizes order, making test fails sometimes. so just test with one entry for now.
+  // note: printing a dictionary randomizes order, making test fails sometimes.
+  // so just test with one entry for now.
   let stringDict: [String: String] = ["en": "Hi"]
   let intDict: [String: Int] = ["en": 11]
 }
@@ -113,8 +99,9 @@ class Episode: Media {
   let someNil: String? = nil
   let date: Date = Date(timeIntervalSince1970: 12345)
   let bool: Bool = true
+  let url: URL = URL(string: "https://www.google.com")!
   let simpleStruct = SimpleStruct()
   let simpleClass = SimpleClass()
-  let url: URL = URL(string: "https://www.google.com")!
+  let color = UIColor.red
 }
 

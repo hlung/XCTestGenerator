@@ -57,16 +57,37 @@ private extension Mirror {
   func labelValues(for name: String, child: Mirror.Child) -> [LabelValue] {
     guard let childLabel = child.label else { return [] }
     let label = "\(name).\(childLabel)"
+    let value = child.value
 
     var result: [LabelValue] = []
-    if let value = XCTestGenerator.codeString(for: child.value) {
-      result += [LabelValue(label: label, value: value)]
+    if let v = XCTestGenerator.codeString(for: value) {
+      result += [LabelValue(label: label, value: v)]
     }
-    else if let array = child.value as? [Any] {
+    else if let array = value as? [Any] {
+      // Array
       result += [LabelValue(label: label + ".count", value: "\(array.count)")]
       for i in 0..<array.count {
         let element = array[i]
         result += labelValues(for: label + "[\(i)]", variable: element)
+      }
+    }
+    else if let dict = value as? [String: Any] {
+      // Dictionary
+      result += [LabelValue(label: label + ".count", value: "\(dict.count)")]
+      for (key, value) in dict {
+        result += labelValues(for: label + "[\"\(key)\"]", variable: value)
+      }
+    }
+    else {
+      // Custom Struct / Class
+      let mirror = Mirror(reflecting: value)
+      if mirror.children.count > 0 {
+        for c in mirror.children {
+          result += labelValues(for: label, child: c)
+        }
+      }
+      else {
+//        result += [LabelValue(label: label, value: "\(value)", failed: true)]
       }
     }
     return result
@@ -90,11 +111,6 @@ private extension Mirror {
 }
 
 extension String {
-//  func wrapURLsWithInitializers() -> String {
-//    let urlPattern = #"[^"](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))[^"]"#
-//    return replacingOccurrences(of: urlPattern, with: "URL(string: \"$1\")!", options: .regularExpression)
-//  }
-
   func removingAllOptionals() -> String {
     var input = self
 
@@ -114,4 +130,11 @@ extension String {
 struct LabelValue {
   let label: String
   let value: String
+  let failed: Bool
+
+  init(label: String, value: String, failed: Bool = false) {
+    self.label = label
+    self.value = value
+    self.failed = failed
+  }
 }
