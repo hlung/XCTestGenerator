@@ -35,20 +35,26 @@ Using Swift's [Reflection](https://developer.apple.com/documentation/swift/mirro
 
 So this...
 ```swift
-let output = Episode()
-let string = XCTestGenerator.generateXCAssertEqualStrings(for: output, name: "output")
+let episode = Episode()
+let output = XCTestGenerator.generate(for: "output", variable: episode)
 ```
 
 will generate this code...
 ```swift
 // Episode
 XCTAssertEqual(output.number, 42)
+XCTAssertEqual(output.intDict.count, 1)
+XCTAssertEqual(output.intDict["en"], 11)
 XCTAssertEqual(output.someOptional, "some optional")
 XCTAssertEqual(output.someNil, nil)
 XCTAssertEqual(output.date, Date(timeIntervalSince1970: 12345.0))
 XCTAssertEqual(output.bool, true)
-XCTAssertEqual(output.simpleStruct, SimpleStruct(foo: "foo!", bar: "bar?"))
-XCTAssertEqual(output.simpleClass, SimpleClass(foo: "foo!", bar: "bar?"))
+XCTAssertEqual(output.url, URL(string: "https://www.google.com")!)
+XCTAssertEqual(output.simpleStruct.foo, "foo!")
+XCTAssertEqual(output.simpleStruct.bar, "bar?")
+XCTAssertEqual(output.simpleClass.foo, "foo!")
+XCTAssertEqual(output.simpleClass.bar, "bar?")
+XCTAssertEqual(output.simpleClass.bar, "bar?")
 ```
 
 You can copy this code to your test files and run. 🎉

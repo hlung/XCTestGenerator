@@ -16,11 +16,11 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(output.array[1], "bar")
     XCTAssertEqual(output.stringDict.count, 1)
     XCTAssertEqual(output.stringDict["en"], "Hi")
-    XCTAssertEqual(output.intDict.count, 1)
-    XCTAssertEqual(output.intDict["en"], 11)
 
     // Episode
     XCTAssertEqual(output.number, 42)
+    XCTAssertEqual(output.intDict.count, 1)
+    XCTAssertEqual(output.intDict["en"], 11)
     XCTAssertEqual(output.someOptional, "some optional")
     XCTAssertEqual(output.someNil, nil)
     XCTAssertEqual(output.date, Date(timeIntervalSince1970: 12345.0))
@@ -90,11 +90,11 @@ class Media {
   // note: printing a dictionary randomizes order, making test fails sometimes.
   // so just test with one entry for now.
   let stringDict: [String: String] = ["en": "Hi"]
-  let intDict: [String: Int] = ["en": 11]
 }
 
 class Episode: Media {
   let number: Int = 42
+  let intDict: [String: Int] = ["en": 11]
   let someOptional: String? = "some optional"
   let someNil: String? = nil
   let date: Date = Date(timeIntervalSince1970: 12345)
