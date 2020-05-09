@@ -11,13 +11,16 @@ public class XCTestGenerator {
 
   class func codeString(for value: Any) -> String? {
     // --- Note about why we need to check "nil" string ---
-    // Mirror.Child value has `Any` type, but can provide `nil`.
+    // Mirror.Child value has `Any` type, but can provide `nil` (Swift allows Optional to Any assignment).
     // This makes checking it with `== nil` always returns false, because it is not an optional type.
     // We work around this by checking it's string representation instead.
     if "\(value)" == "nil" {
       return "nil"
     }
     else if let string = value as? String {
+      return "\"\(string)\"".removingAllOptionals()
+    }
+    else if let string = value as? Character {
       return "\"\(string)\"".removingAllOptionals()
     }
     else if let date = value as? Date {
