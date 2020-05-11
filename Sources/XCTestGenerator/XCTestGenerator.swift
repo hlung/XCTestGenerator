@@ -106,6 +106,13 @@ private extension Mirror {
       let mirror = Mirror(reflecting: value)
       if !mirror.children.isEmpty {
         for c in mirror.children {
+          if label.contains("$__lazy_storage_$_") {
+            // Fail
+            result += [LabelValue(label: label, value: "\(type(of: value))", failed: true)]
+          }
+          else {
+
+          }
           result += labelValues(for: c, name: label.removingOptionalSomeKeyword())
         }
       }
