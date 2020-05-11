@@ -4,11 +4,12 @@ import XCTest
 final class XCTestGeneratorTests: XCTestCase {
 
   func test_generate() {
-    let episode = Episode()
-    let output = XCTestGenerator.generate(for: episode, name: "output")
+    let input = Episode()
+    let output = XCTestGenerator.generate(for: input, name: "output")
     print(output)
 
     let expected = """
+
     // Media
     XCTAssertEqual(output.name, "Some media")
     XCTAssertEqual(output.array.count, 2)
@@ -27,11 +28,13 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(output.bool, true)
     XCTAssertEqual(output.url, URL(string: "https://www.google.com")!)
     XCTAssertEqual(output.simpleStruct.foo, "foo!")
-    XCTAssertEqual(output.simpleStruct.bar, "bar?")
-    XCTAssertEqual(output.simpleClass.foo, "foo!")
-    XCTAssertEqual(output.simpleClass.bar, "bar?")
+    XCTAssertEqual(output.simpleStruct.bar, "bar")
+    XCTAssertEqual(output.simpleClass?.foo, "foo!")
+    XCTAssertEqual(output.simpleClass?.bar, "bar")
+
     """
 
+    // Split to check line-by-line so test failure can show exactly which line fails.
     let outputArray = output.split(separator: "\n")
     let expectedArray = expected.split(separator: "\n")
 
@@ -48,19 +51,12 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(XCTestGenerator.codeString(for: true), "true")
   }
 
-  func test_remove_optional() {
-    XCTAssertEqual(
-      #"Optional("ja") Optional("ja")"#.removingAllOptionals(),
-      #""ja" "ja""#
-    )
-  }
-
-  func test_remove_optional_nested() {
-    XCTAssertEqual(
-      #"Optional(a, Optional("ja"), Optional("ja"))"#.removingAllOptionals(),
-      #"a, "ja", "ja""#
-    )
-  }
+//  func test_string_removing_all_optionals() {
+//    XCTAssertEqual(
+//      #"Optional(1, Optional("ja"), Optional("ja"))"#.removingAllOptionals(),
+//      #"1, "ja", "ja""#
+//    )
+//  }
 
 //  func test_wrap_url() {
 //    XCTAssertEqual(
@@ -76,12 +72,12 @@ final class XCTestGeneratorTests: XCTestCase {
 
 struct SimpleStruct {
   let foo: String = "foo!"
-  let bar: String? = "bar?"
+  let bar: String? = "bar"
 }
 
 struct SimpleClass {
   let foo: String = "foo!"
-  let bar: String? = "bar?"
+  let bar: String? = "bar"
 }
 
 class Media {
@@ -94,13 +90,13 @@ class Media {
 
 class Episode: Media {
   let number: Int = 42
-  let intDict: [String: Int] = ["en": 11]
+  let intDict: [String: Int]? = ["en": 11]
   let someOptional: String? = "some optional"
   let someNil: String? = nil
   let date: Date = Date(timeIntervalSince1970: 12345)
   let bool: Bool = true
   let url: URL = URL(string: "https://www.google.com")!
   let simpleStruct = SimpleStruct()
-  let simpleClass = SimpleClass()
+  let simpleClass: SimpleClass? = SimpleClass()
 }
 

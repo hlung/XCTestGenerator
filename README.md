@@ -14,12 +14,12 @@ Suppose you have an `Episode` class with several properties. Something like this
 ```swift
 struct SimpleStruct {
   let foo: String = "foo!"
-  let bar: String? = "bar?"
+  let bar: String? = "bar"
 }
 
 struct SimpleClass {
   let foo: String = "foo!"
-  let bar: String? = "bar?"
+  let bar: String? = "bar"
 }
 
 class Episode {
@@ -60,10 +60,10 @@ XCTAssertEqual(output.date, Date(timeIntervalSince1970: 12345.0))
 XCTAssertEqual(output.bool, true)
 XCTAssertEqual(output.url, URL(string: "https://www.google.com")!)
 XCTAssertEqual(output.simpleStruct.foo, "foo!")
-XCTAssertEqual(output.simpleStruct.bar, "bar?")
+XCTAssertEqual(output.simpleStruct.bar, "bar")
 XCTAssertEqual(output.simpleClass.foo, "foo!")
-XCTAssertEqual(output.simpleClass.bar, "bar?")
-XCTAssertEqual(output.simpleClass.bar, "bar?")
+XCTAssertEqual(output.simpleClass.bar, "bar")
+XCTAssertEqual(output.simpleClass.bar, "bar")
 ```
 
 You can copy this code to your test files and run. 🎉

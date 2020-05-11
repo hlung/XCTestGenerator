@@ -4,9 +4,10 @@ public class XCTestGenerator {
   /// Example:
   /// let string = XCTestGenerator.generate(for: output, name: "output")
   public class func generate(for variable: Any, name: String) -> String {
-    Mirror(reflecting: variable)
+    let string = Mirror(reflecting: variable)
       .generateStrings(forName: name)
       .joined(separator: "\n")
+    return "\n\(string)\n"
   }
 
   class func codeString(for value: Any) -> String? {
@@ -66,8 +67,8 @@ private extension Mirror {
 
   func labelValues(for child: Mirror.Child, name: String) -> [LabelValue] {
     guard let childLabel = child.label else { return [] }
-    let label = "\(name).\(childLabel)"
     let value = child.value
+    let label = "\(name).\(childLabel)"
 
     var result: [LabelValue] = []
     if let v = XCTestGenerator.codeString(for: value) {
@@ -93,10 +94,11 @@ private extension Mirror {
       let mirror = Mirror(reflecting: value)
       if !mirror.children.isEmpty {
         for c in mirror.children {
-          result += labelValues(for: c, name: label)
+          result += labelValues(for: c, name: label.removingOptionalSomeKeyword())
         }
       }
       else {
+        // Fail
         result += [LabelValue(label: label, value: "\(type(of: value))", failed: true)]
       }
     }
@@ -120,7 +122,13 @@ private extension Mirror {
 
 }
 
-extension String {
+private extension String {
+  // Mirror will return `.some` for Optional properties.
+  // Need to change it to `?` to unwrap the optional.
+  func removingOptionalSomeKeyword() -> String {
+    replacingOccurrences(of: #"\.some$"#, with: "?", options: .regularExpression)
+  }
+
   func removingAllOptionals() -> String {
     var input = self
 
@@ -137,7 +145,7 @@ extension String {
   }
 }
 
-struct LabelValue {
+private struct LabelValue {
   let label: String
   let value: String
   let failed: Bool
