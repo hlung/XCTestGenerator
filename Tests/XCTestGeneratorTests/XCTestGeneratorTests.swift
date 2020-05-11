@@ -5,7 +5,7 @@ final class XCTestGeneratorTests: XCTestCase {
 
   func test_generate() {
     let episode = Episode()
-    let output = XCTestGenerator.generate(for: "output", variable: episode)
+    let output = XCTestGenerator.generate(for: episode, name: "output")
     print(output)
 
     let expected = """

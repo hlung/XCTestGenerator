@@ -3,9 +3,9 @@ import Foundation
 public class XCTestGenerator {
   /// Example:
   /// let string = XCTestGenerator.generate(for: output, name: "output")
-  public class func generate(for name: String, variable: Any) -> String {
+  public class func generate(for variable: Any, name: String) -> String {
     Mirror(reflecting: variable)
-      .generateStrings(for: name)
+      .generateStrings(forName: name)
       .joined(separator: "\n")
   }
 
@@ -42,16 +42,16 @@ public class XCTestGenerator {
 
 private extension Mirror {
 
-  func generateStrings(for name: String) -> [String] {
+  func generateStrings(forName name: String) -> [String] {
     var output: [String] = []
 
     if let superclassMirror = superclassMirror {
-      output += superclassMirror.generateStrings(for: name)
+      output += superclassMirror.generateStrings(forName: name)
     }
 
     output += ["// \(subjectType)"]
     for child in children {
-      output += labelValues(for: name, child: child).map { lv in
+      output += labelValues(for: child, name: name).map { lv in
         if lv.failed {
           return "// Type \(lv.value) of \"\(lv.label)\" is currently unsupported."
         }
@@ -64,7 +64,7 @@ private extension Mirror {
     return output
   }
 
-  func labelValues(for name: String, child: Mirror.Child) -> [LabelValue] {
+  func labelValues(for child: Mirror.Child, name: String) -> [LabelValue] {
     guard let childLabel = child.label else { return [] }
     let label = "\(name).\(childLabel)"
     let value = child.value
@@ -77,23 +77,23 @@ private extension Mirror {
       // Array
       result += [LabelValue(label: label + ".count", value: "\(array.count)")]
       for i in 0..<array.count {
-        let element = array[i]
-        result += labelValues(for: label + "[\(i)]", variable: element)
+        let value = array[i]
+        result += labelValues(for: value, name: label + "[\(i)]")
       }
     }
     else if let dict = value as? [String: Any] {
       // Dictionary
       result += [LabelValue(label: label + ".count", value: "\(dict.count)")]
       for (key, value) in dict {
-        result += labelValues(for: label + "[\"\(key)\"]", variable: value)
+        result += labelValues(for: value, name: label + "[\"\(key)\"]")
       }
     }
     else {
       // Custom Struct / Class
       let mirror = Mirror(reflecting: value)
-      if mirror.children.count > 0 {
+      if !mirror.children.isEmpty {
         for c in mirror.children {
-          result += labelValues(for: label, child: c)
+          result += labelValues(for: c, name: label)
         }
       }
       else {
@@ -103,7 +103,7 @@ private extension Mirror {
     return result
   }
 
-  func labelValues(for name: String, variable: Any) -> [LabelValue] {
+  func labelValues(for variable: Any, name: String) -> [LabelValue] {
     var result: [LabelValue] = []
 
     if let value = XCTestGenerator.codeString(for: variable) {
@@ -112,7 +112,7 @@ private extension Mirror {
     else {
       let mirror = Mirror(reflecting: variable)
       for c in mirror.children {
-        result += labelValues(for: name, child: c)
+        result += labelValues(for: c, name: name)
       }
     }
     return result

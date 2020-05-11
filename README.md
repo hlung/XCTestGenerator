@@ -45,7 +45,7 @@ Using Swift's [Reflection](https://developer.apple.com/documentation/swift/mirro
 So this...
 ```swift
 let episode = Episode()
-let output = XCTestGenerator.generate(for: "output", variable: episode)
+let output = XCTestGenerator.generate(for: episode, name: "output")
 ```
 
 will generate this code...
