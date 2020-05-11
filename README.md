@@ -74,3 +74,7 @@ Then, you can copy this code to your test file. 🎉
 ## Frameworks used
 
 - Swift [Reflection](https://developer.apple.com/documentation/swift/mirror) in Standard Library.
+
+## Known issues
+
+- `lazy var` produces some private `$__lazy_storage_$_` variable label prefix and `nil` value.
