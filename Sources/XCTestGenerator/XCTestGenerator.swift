@@ -3,13 +3,13 @@ import Foundation
 public class XCTestGenerator {
   /// Example:
   /// let string = XCTestGenerator.generate(for: output, name: "output")
-  public class func generate(for variable: Any, name: String, swiftLintMaxLineLength: Int? = nil) -> String {
+  public class func generate(for variable: Any, name: String, addSwiftLintForLineLength: Int? = nil) -> String {
     var array = Mirror(reflecting: variable).generateStrings(forName: name)
 
-    if let swiftLintMaxLineLength = swiftLintMaxLineLength {
+    if let length = addSwiftLintForLineLength {
       for i in 0..<array.count {
         let string = array[i]
-        if string.count >= swiftLintMaxLineLength {
+        if string.count >= length {
           array[i] = string + " // swiftlint:disable:this line_length"
         }
       }

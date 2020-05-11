@@ -51,7 +51,7 @@ final class XCTestGeneratorTests: XCTestCase {
 
   func test_very_long_property_should_produce_swiftlint_disable_comment() {
     let input = VeryLongPropertyStruct()
-    let output = XCTestGenerator.generate(for: input, name: "output", swiftLintMaxLineLength: 200)
+    let output = XCTestGenerator.generate(for: input, name: "output", addSwiftLintForLineLength: 200)
     XCTAssertEqual(output, """
 
     // VeryLongPropertyStruct
