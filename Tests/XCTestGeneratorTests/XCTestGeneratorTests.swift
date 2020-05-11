@@ -16,7 +16,6 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(output.array[1], "bar")
     XCTAssertEqual(output.stringDict.count, 1)
     XCTAssertEqual(output.stringDict["en"], "Hi")
-
     // Episode
     XCTAssertEqual(output.number, 42)
     XCTAssertEqual(output.intDict.count, 1)

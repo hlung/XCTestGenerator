@@ -15,6 +15,7 @@ public class XCTestGenerator {
       }
     }
 
+    // Add some line spacing for easier noticing in debug console
     return "\n\(array.joined(separator: "\n"))\n"
   }
 
