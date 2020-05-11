@@ -43,6 +43,8 @@ public class XCTestGenerator {
       return "\(value)".removingAllOptionals()
     }
     // Add more supported types here
+    // TODO:
+    // - support lazy storage, currently output XCTAssertEqual(output.$__lazy_storage_$_age, nil)
     else {
       return nil
     }
@@ -63,7 +65,8 @@ private extension Mirror {
     for child in children {
       output += labelValues(for: child, name: name).map { lv in
         if lv.failed {
-          return "// Type \(lv.value) of \"\(lv.label)\" is currently unsupported."
+          return "// XCTAssertEqual(\(lv.label), \(lv.value)) // currently unsupported"
+//          return "// Type \(lv.value) of \"\(lv.label)\" is currently unsupported."
         }
         else {
           return "XCTAssertEqual(\(lv.label), \(lv.value))"
