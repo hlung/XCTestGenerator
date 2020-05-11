@@ -6,7 +6,6 @@ final class XCTestGeneratorTests: XCTestCase {
   func test_generate() {
     let input = Episode()
     let output = XCTestGenerator.generate(for: input, name: "output")
-    print(output)
 
     let expected = """
 
@@ -51,52 +50,14 @@ final class XCTestGeneratorTests: XCTestCase {
     XCTAssertEqual(XCTestGenerator.codeString(for: true), "true")
   }
 
-//  func test_string_removing_all_optionals() {
-//    XCTAssertEqual(
-//      #"Optional(1, Optional("ja"), Optional("ja"))"#.removingAllOptionals(),
-//      #"1, "ja", "ja""#
-//    )
-//  }
+  func test_very_long_property_should_produce_swiftlint_disable_comment() {
+    let input = VeryLongPropertyStruct()
+    let output = XCTestGenerator.generate(for: input, name: "output", swiftLintMaxLineLength: 200)
+    XCTAssertEqual(output, """
 
-//  func test_wrap_url() {
-//    XCTAssertEqual(
-//      #"Viki.Images.Image(url: https://fakeimage.com, source: "viki"))"#.wrapURLsWithInitializers(),
-//      #"Viki.Images.Image(url: URL(string: "https://fakeimage.com")!, source: "viki"))"#
-//    )
-//  }
+    // VeryLongPropertyStruct
+    XCTAssertEqual(output.string, "During the time of the Chinese Northern Qi dynasty, a lady-in-waiting could never become a princess because of the rigid social hierarchy and the actions of many jealous rivals. Lu Zhen (Zhao Li Ying) flees from an arranged marriage and her evil stepmother and enters the palace as an attendant. She meets Prince Gao Zhan (Chen Xiao), and the two fall in love but know that their social differences would never allow them to marry.") // swiftlint:disable:this line_length
 
-//  static var allTests = [
-//    ("testExample", testExample),
-//  ]
+    """)
+  }
 }
-
-struct SimpleStruct {
-  let foo: String = "foo!"
-  let bar: String? = "bar"
-}
-
-struct SimpleClass {
-  let foo: String = "foo!"
-  let bar: String? = "bar"
-}
-
-class Media {
-  let name: String = "Some media"
-  let array: [String] = ["foo", "bar"]
-  // note: printing a dictionary randomizes order, making test fails sometimes.
-  // so just test with one entry for now.
-  let stringDict: [String: String] = ["en": "Hi"]
-}
-
-class Episode: Media {
-  let number: Int = 42
-  let intDict: [String: Int]? = ["en": 11]
-  let someOptional: String? = "some optional"
-  let someNil: String? = nil
-  let date: Date = Date(timeIntervalSince1970: 12345)
-  let bool: Bool = true
-  let url: URL = URL(string: "https://www.google.com")!
-  let simpleStruct = SimpleStruct()
-  let simpleClass: SimpleClass? = SimpleClass()
-}
-

@@ -3,11 +3,19 @@ import Foundation
 public class XCTestGenerator {
   /// Example:
   /// let string = XCTestGenerator.generate(for: output, name: "output")
-  public class func generate(for variable: Any, name: String) -> String {
-    let string = Mirror(reflecting: variable)
-      .generateStrings(forName: name)
-      .joined(separator: "\n")
-    return "\n\(string)\n"
+  public class func generate(for variable: Any, name: String, swiftLintMaxLineLength: Int? = nil) -> String {
+    var array = Mirror(reflecting: variable).generateStrings(forName: name)
+
+    if let swiftLintMaxLineLength = swiftLintMaxLineLength {
+      for i in 0..<array.count {
+        let string = array[i]
+        if string.count >= swiftLintMaxLineLength {
+          array[i] = string + " // swiftlint:disable:this line_length"
+        }
+      }
+    }
+
+    return "\n\(array.joined(separator: "\n"))\n"
   }
 
   class func codeString(for value: Any) -> String? {
